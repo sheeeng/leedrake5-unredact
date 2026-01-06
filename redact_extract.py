@@ -314,12 +314,12 @@ def build_line_text(line_words, space_unit_pts=3.0, min_spaces=1, match_font=Fal
         else:
             font_size = 10.0
     
-    # Final bounds check: clamp to reasonable range
-    font_size = max(6.0, min(12.0, font_size))
-            hs.append(max(6.0, bottom - top))
+        # Final bounds check: clamp to reasonable range
+        font_size = max(6.0, min(12.0, font_size))
+        hs.append(max(6.0, bottom - top))
         hs.sort()
         font_size = float(hs[len(hs) // 2]) if hs else 10.0
-    
+
 
     font_name = "helvetica"
     if fontnames and match_font:
@@ -485,11 +485,11 @@ def main():
         raise FileNotFoundError(args.input_pdf)
 
     if args.output is None:
-        base_dir = os.path.dirname(args.input_pdf) # ex: ./files
-        new_folder = base_dir + "/unredacted/" # ex: ./files/unredacted/
+        base_dir = os.path.dirname(args.input_pdf) or "." # ex: ./files (or "." if no dir)
+        new_folder = os.path.join(base_dir, "unredacted") # ex: ./files/unredacted/
         pdf_name = Path(args.input_pdf).stem # ex: document1 (note: no extension)
         suffix = "_side_by_side.pdf" if args.mode == "side_by_side" else "_overlay_white.pdf"
-        args.output = new_folder + pdf_name + suffix # ex ./files/unredacted/document1_side_by_side.pdf
+        args.output = os.path.join(new_folder, pdf_name + suffix) # ex ./files/unredacted/document1_side_by_side.pdf
 
         # create unredacted directory if not exists
         if os.path.isdir(new_folder):
